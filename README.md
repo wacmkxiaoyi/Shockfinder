@@ -89,7 +89,7 @@ Download and decompress Shockfinder to your computer<br>
 
 #### 1.2.1° Shockfinder environment
 
-** command: python (Shockfinder directory)/shock_finder.py [pre-command [pre-command-value]]**
+Command: **python (Shockfinder directory)/shock_finder.py [pre-command [pre-command-value]]**
 
 For example in Linux, Shockfinder is installed in your home directory<br>
 ```shell
