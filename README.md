@@ -101,7 +101,7 @@ For Windows is similar to Linux, and a quick operation .bat file in the director
 ```shell
 D:
 cd Shockfinder
-python ~/shock_finder.py
+python shock_finder.py
 ```
 
 #### 1.2.2° Pre-command:
