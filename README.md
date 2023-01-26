@@ -142,6 +142,7 @@ Basic_command [parameter[-parameter_type][=[datasource[@datamodel]]]]
 ```
 
 Basic_command:
+
 **set**: set parameter before data analysis<br>
 **update**: update parameter after analysis<br>
 **curve**: curve operation<br>
