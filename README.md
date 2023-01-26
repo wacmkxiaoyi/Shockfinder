@@ -109,19 +109,19 @@ python shock_finder.py
 
 #### 1.3.2° Pre-command:
 
-[r|-r|read]: Read the command set from a file, which is used for non-interactive platforms or batch processing<br>
-[cv|-cv|curve]: Load curve from csv file(s)<br>
-[o|-o|log]: Log file, used for non-interactive processing<br>
-[l|-l|load]: Load a post-analysis result from a csv file<br>
-[t|-t|test]: Debug mode (default False), software will crash when is meeting an exception error in debug mode.
+**[r|-r|read]**: Read the command set from a file, which is used for non-interactive platforms or batch processing<br>
+**[cv|-cv|curve]**: Load curve from csv file(s)<br>
+**[o|-o|log]**: Log file, used for non-interactive processing<br>
+**[l|-l|load]**: Load a post-analysis result from a csv file<br>
+**[t|-t|test]**: Debug mode (default False), software will crash when is meeting an exception error in debug mode.
 
 E.g., set log file: ~/test_log_file.log, set commands files: ~/command1 and ~/command2<br>
 ```shell
-python ~/shock_finder.py -o ~/test_log_file.log, r=(~/command1,~/command2)
+python ~/shock_finder.py o=~/test_log_file.log, r=(~/command1,~/command2)
 ```
 load a result file ~/result.csv and a curve ~/curve.csv<br>
 ```shell
-python ~/shock_finder.py -l ~/result.csv cv=~/curve.csv
+python ~/shock_finder.py l=~/result.csv cv=~/curve.csv
 ```
 Debug mode, parameter 't' is abbreviation of 'True'<br>
 ```shell
