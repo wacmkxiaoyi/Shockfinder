@@ -412,8 +412,8 @@ def get(Dataobj,args={},vargs={}):
 		"MassFlux_inj":inj,
 		"MassFlux_outflow":outflow,
 		"MassFlux_jet":jet,
-		"MassFlux_Toutflow":-(outflow+wind)+jet,
-		"MassFlux_Accretion":-(edge+jet)
+		"MassFlux_Toutflow":-(outflow+wind),
+		"MassFlux_Accretion":-edge
 	}
 	Dataobj.quantities.update(quantities)
 	return Dataobj
