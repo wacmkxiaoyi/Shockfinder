@@ -33,7 +33,7 @@ At the same time, we are very encourage that you use our GUI engine [**XenonUI**
 pip3 install XenonUI
 ```
 
-**Notice**: **XenonUI** supports UNIX and windows systems, but the **tkinter** libraries have to be installed! More detail see [https://www.github.com/wacmkxiaoyi/Xenon-UI](https://www.github.com/wacmkxiaoyi/Xenon-UI).
+**Notice**: **XenonUI** is **multiplatforms**, but the **tkinter** libraries have to be installed! More detail see [https://www.github.com/wacmkxiaoyi/Xenon-UI](https://www.github.com/wacmkxiaoyi/Xenon-UI).
 
 # Useage
 
