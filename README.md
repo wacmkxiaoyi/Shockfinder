@@ -6,7 +6,7 @@ Author: Junxiang H. & C. B. Singh<br>
 If you have any questions and suggestions<br>
 Please contact: [wacmkxiaoyi@gmail.com](mailto:wacmkxiaoyi@gmail.com)
 
-You can download the **outdate** version at **"Releases"** in your right hand.
+You can access [**Outdate version**](https://github.com/wacmkxiaoyi/Shockfinder/releases) (i.e., \< V7.0) here.
 
 Latest Version: 7.3.0, date: 2023-11-13
 
