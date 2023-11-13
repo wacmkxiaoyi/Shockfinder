@@ -2,13 +2,13 @@
 
 **ShockFinder** is an interactive scientic simulation data analysis software based on python and supports multi-process, multi-mode, I/O access and drawing.
 
-Author Junxiang H. & C. B. Singh<br>
+Author: Junxiang H. & C. B. Singh<br>
 If you have any questions and suggestions<br>
-Please contact: huangjunxiang@mail.ynu.edu.cn
+Please contact: [wacmkxiaoyi@gmail.com](mailto:wacmkxiaoyi@gmail.com)
 
 You can download the **outdate** version at **"Releases"** in your right hand.
 
-Latest Version: 7.2, date: 2023-10-24
+Latest Version: 7.3.0, date: 2023-11-13
 
 # Install
 
@@ -19,7 +19,7 @@ Please follow one of the ways to install **ShockFinder**
 pip3 install ShockFinder
 ```
 
-If you want to use multi-processes during analysis and reading, it is recommended to use the **XME** interface of the **WACMK-Xenon** software set, which can be installed through the following command:
+If you want to use multi-processes during analysis and reading, it is recommended to use the [**XME**](https://www.github.com/wacmkxiaoyi/Xenon-Multiprocessing-Engine) interface of the **WACMK-Xenon** software set, which can be installed through the following command:
 
 ```shell
 pip3 install XME
@@ -27,11 +27,13 @@ pip3 install XME
 
 If you have better multiprocessing engine, you can definde it by using ShockFinder inline command ***-n=MultiprocessEngine@configname***. 
 
-At the same time, we are very encourage that you use our GUI engine (**XenonUI**) to assist your analysis work. You can install it by following command:
+At the same time, we are very encourage that you use our GUI engine [**XenonUI**](https://www.github.com/wacmkxiaoyi/Xenon-UI) to assist your analysis work. You can install it by following command:
 
 ```shell
 pip3 install XenonUI
 ```
+
+**XenonUI** supports UNIX and windows systems, but the **tkinter** libraries have to be installed! More detail see [https://www.github.com/wacmkxiaoyi/Xenon-UI](https://www.github.com/wacmkxiaoyi/Xenon-UI).
 
 # Useage
 
@@ -413,7 +415,7 @@ def get(Dataobj,args={},vargs={}):
 		"MassFlux_outflow":outflow,
 		"MassFlux_jet":jet,
 		"MassFlux_Toutflow":-(outflow+wind),
-		"MassFlux_Accretion":-edge
+		"MassFlux_Accretion":-(edge+jet)
 	}
 	Dataobj.quantities.update(quantities)
 	return Dataobj
