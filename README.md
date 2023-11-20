@@ -6,7 +6,7 @@ Author: Junxiang H. & C. B. Singh<br>
 If you have any questions and suggestions<br>
 Please contact: [wacmkxiaoyi@gmail.com](mailto:wacmkxiaoyi@gmail.com)
 
-You can access [**Outdate version**](https://github.com/wacmkxiaoyi/Shockfinder/releases) (i.e., \< V7.0) here.
+You can access [**Outdate version**](https://github.com/wacmkxiaoyi/Shockfinder/releases) (i.e., \< V5.0) here.
 
 Latest Version: 7.3.0, date: 2023-11-13
 
@@ -33,7 +33,7 @@ At the same time, we are very encourage that you use our GUI engine [**XenonUI**
 pip3 install XenonUI
 ```
 
-**Notice**: **XenonUI** is **multiplatforms**, but the **tkinter** libraries have to be installed! More detail see [https://www.github.com/wacmkxiaoyi/Xenon-UI](https://www.github.com/wacmkxiaoyi/Xenon-UI).
+**Notice**: **XenonUI** supports UNIX and windows systems, but the **tkinter** libraries have to be installed! More detail see [https://www.github.com/wacmkxiaoyi/Xenon-UI](https://www.github.com/wacmkxiaoyi/Xenon-UI).
 
 # Useage
 
@@ -420,7 +420,7 @@ def get(Dataobj,args={},vargs={}):
 	Dataobj.quantities.update(quantities)
 	return Dataobj
 def result(quantity_name=None,anafname=None):
-	return ("MassFlux_Accretion","MassFlux_Toutflow","MassFlux_edge","MassFlux_wind","MassFlux_inj","MassFlux_outflow","MassFlux_jet") #this function will return result types shown in GUI
+	return ("MassFlux_edge","MassFlux_Toutflow") #this function will return result types shown in GUI
 ```
 
 ```shell
