@@ -67,6 +67,8 @@ def drop_bk(strc):
 if __name__=="__main__":#windows support
 	gui=True
 	for i in sys.argv[1:]:
+		if "=" not in i:
+			i="file="+i
 		if i.split("=")[0] in ("f","-f","file"):
 			ShockFinder.ShockFinder(drop_bk(i.split("=")[1]))
 			gui=False
