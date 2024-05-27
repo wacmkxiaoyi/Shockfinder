@@ -178,7 +178,7 @@ def page(self):  # support 0d
     entry_yco.pack(side="left")
     Label(box, text="|").pack(side="left")
     entry_yls = Entry(box, width=20)
-    update_entry(entry_yco, "-", False)
+    update_entry(entry_yls, "-", False)
     entry_yls.pack(side="left")
     Label(box, text="|").pack(side="left")
     entry_yargs = Entry(box, width=20)

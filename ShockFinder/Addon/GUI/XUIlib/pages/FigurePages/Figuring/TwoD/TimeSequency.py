@@ -357,7 +357,6 @@ def page(self):  # support 0d
                 entry_syrhof,
                 entry_syrhoe,
             )
-            x = x[: len(sy)]
             self.tkobj.io_recv("Figuring Lines ...")
             lines = []
             for i in range(self.maxline):
@@ -373,7 +372,7 @@ def page(self):  # support 0d
                 if str(y) != "False":
                     lines += self.get_line(
                         self.get_lineinfo(
-                            x,
+                            x[: len(y)],
                             y,
                             entry_ylb[i],
                             entry_yco[i],
@@ -401,7 +400,7 @@ def page(self):  # support 0d
             if str(sy) != "False":
                 line_s = self.get_line(
                     self.get_lineinfo(
-                        x, sy, entry_sylb, entry_syco, entry_syls, entry_syargs
+                        x[: len(sy)], sy, entry_sylb, entry_syco, entry_syls, entry_syargs
                     )
                 )[0]
                 self.pageargs["Infobj"].Config["Painter"]["P2D"].line_share_x(
