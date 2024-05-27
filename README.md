@@ -8,7 +8,9 @@ Please contact: [wacmkxiaoyi@gmail.com](mailto:wacmkxiaoyi@gmail.com)
 
 You can access [**Outdate version**](https://github.com/wacmkxiaoyi/Shockfinder/releases) (i.e., \< V5.0) here.
 
-Latest Version: 7.3.0, date: 2023-11-13
+Latest Version: 7.4.8, date: 2024-05-27
+
+**update**: Optimize code structures
 
 # Install
 
