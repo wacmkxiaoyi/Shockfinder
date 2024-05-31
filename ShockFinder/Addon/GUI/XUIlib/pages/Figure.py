@@ -381,7 +381,8 @@ class page(page):
         return False
 
     def get_y(self, qt, rf, re, tf, te, rhof, rhoe):
-        if qt.get() == "":
+        qt_value = qt.get()
+        if qt_value == "":
             return False
         factor = 1
         factor *= str_to_float(rf.get()) * self.unit_r ** str_to_float(re.get())
@@ -389,8 +390,10 @@ class page(page):
         factor *= str_to_float(rhof.get()) * self.unit_rho ** str_to_float(rhoe.get())
         result = []
         for i in self.pageargs["Infobj"].database.data:
-            if i != None and qt.get() in i.quantities:
-                result.append(i.quantities[qt.get()] * factor)
+            if i != None:
+                if qt_value not in i.quantities:
+                    break
+                result.append(i.quantities[qt_value] * factor)
         return np.array(result)
 
     def get_lineinfo(self, x, y, ylb, yco, yls, yargs):

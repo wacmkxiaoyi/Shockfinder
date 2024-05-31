@@ -249,11 +249,12 @@ def page(self):  # support 0d
     Label(self.add_row(bigbox), text="=" * 500).place(x=0, y=0, anchor="nw")  # end
 
     def drawfft(event):
-        if self.FFT_Qt.get() == "":
+        qt_value = self.FFT_Qt.get()
+        if qt_value == "":
             return
         try:
             # if True:
-            self.tkobj.io_recv("Figuring FFT with", self.FFT_Qt.get(), "...")
+            self.tkobj.io_recv("Figuring FFT with", qt_value, "...")
             # get figinfo
             figureinfo = self.get_figureinfo(
                 entry_ft,
@@ -285,20 +286,22 @@ def page(self):  # support 0d
             if "Time" in figureinfo.keys():
                 if type(figureinfo["Time"]) not in (list, tuple, np.ndarray):
                     figureinfo["Time"] = [figureinfo["Time"]]
-                for i in figureinfo["Time"]:
-                    if i > len(tt):
-                        return self.tkobj.io_recv(
-                            "Error: Time list exceeds limit", color="red"
-                        )
+                for i in range(len(figureinfo["Time"])):
+                    if figureinfo["Time"][i] < -1:
+                        figureinfo["Time"][i] = 0
+                    elif figureinfo["Time"][i] > len(tt):
+                        figureinfo["Time"][i] = tt[-1]
                 tt = np.arange(*figureinfo["Time"])
             dt = (tt[-1] - tt[0]) / (len(tt) - 1)
 
             for i in tt:
-                if self.pageargs["Infobj"].database.data[i] != None and self.FFT_Qt.get() in self.pageargs["Infobj"].database.data[i].quantities:
+                if self.pageargs["Infobj"].database.data[i] != None:
+                    if qt_value not in self.pageargs["Infobj"].database.data[i].quantities:
+                        break
                     ft.append(
                         self.pageargs["Infobj"]
                         .database.data[i]
-                        .quantities[self.FFT_Qt.get()]
+                        .quantities[qt_value]
                         * factor
                     )
             ft = np.array(ft)
