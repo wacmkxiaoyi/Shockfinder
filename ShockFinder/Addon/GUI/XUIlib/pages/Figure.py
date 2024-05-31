@@ -521,7 +521,7 @@ class page(page):
             if self.pageargs["Infobj"].database.data[i] != None:
                 self.usefultindex.append(self.pageargs["Infobj"].database.tindex[i])
         for index, value in enumerate(self.avqt):
-            self.avqt[index] = tuple(set(self.avqt))
+            self.avqt[index] = list(set(value))
         self.LD_index.config(values=self.usefultindex)
         self.FFT_Qt.config(values=[""] + self.avqt[0])
         self.box_0D.config(values=[""] + self.avqt[0] + ["geometry"])
