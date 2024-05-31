@@ -520,6 +520,8 @@ class page(page):
         for i in range(len(self.pageargs["Infobj"].database.data)):
             if self.pageargs["Infobj"].database.data[i] != None:
                 self.usefultindex.append(self.pageargs["Infobj"].database.tindex[i])
+        for index, value in enumerate(self.avqt):
+            self.avqt[index] = list(set(self.avqt))
         self.LD_index.config(values=self.usefultindex)
         self.FFT_Qt.config(values=[""] + self.avqt[0])
         self.box_0D.config(values=[""] + self.avqt[0] + ["geometry"])
@@ -556,8 +558,8 @@ class page(page):
         self.hdf5handler = ShockFinderFiguresHDF5(self.tkobj.io_recv)
         self.set_image(self.img["logo"])
         self.add_useless_menu("Database↓")
-        GlobalSettings.page(self)
         LoadData.page(self)
+        GlobalSettings.page(self)
         self.add_useless_menu("Figure↓")
         UnitSet.page(self)
         QuickSaved.page(self)
