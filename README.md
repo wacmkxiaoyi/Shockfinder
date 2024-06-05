@@ -276,88 +276,222 @@ in the DOC window. The new simulated data type or analysis method will then be d
 
 We will present here an analytical method suitable for our current working model for calculating mass fluxes (i.e. accretion rates, etc.)
 
-```python
-#File BlackHoleMassFlux.py
-#WACMK Tech
-#Only for 2D data, support SPHERICAL, POLAR, XOY
-#	edge: fall into black hole, match accretion rate.
+```python# File BlackHoleMassFlux.py
+# WACMK Tech
+# Only for 2D data, support SPHERICAL, POLAR, XOY
+# 	edge: fall into black hole, match accretion rate.
 # 		plus : escape from black hole, minor: fall into black hole
-#	inj: injet flow
-#		plus : accreted into system, minor: escape from system
-#	wind: wind
-#		plus: back to system, minor: escape from system
-#	outflow:
-#		plus: back to system, minor: escape from system	
+# 	inj: injet flow
+# 		plus : accreted into system, minor: escape from system
+# 	wind: wind
+# 		plus: back to system, minor: escape from system
+# 	outflow:
+# 		plus: back to system, minor: escape from system
 #   jet:
-#		plus: escape from bh,....
-#in each case, positive flux means material go to accretion region
-#ac_begin and ac_end are size of accretion region (Escapt Polar coordinate)
+# 		plus: escape from bh,....
+# in each case, positive flux means material go to accretion region
+# ac_begin and ac_end are size of accretion region (Escapt Polar coordinate)
 
 try:
-	from ShockFinder.Addon.AnalysisTool.Basic import *
-	from ShockFinder.Addon.AnalysisTool.Differential import integrate_sph_sur,integrate_pol_sur,integrate_surface,get_closest_index
-	#if AvgTh_CAL is True
-	#import ShockFinder.Addon.AnalysisTool.Mean as Mean
-	#import ShockFinder.Addon.AnalysisTool.<packages name> as <packages name>
+    from ShockFinder.Addon.AnalysisTool.Basic import *
+    from ShockFinder.Addon.AnalysisTool.Differential import (
+        integrate_sph_sur,
+        integrate_pol_sur,
+        integrate_surface,
+        get_closest_index,
+    )
+
+    # if AvgTh_CAL is True
+    # import ShockFinder.Addon.AnalysisTool.Mean as Mean
+    # import ShockFinder.Addon.AnalysisTool.<packages name> as <packages name>
 except Exception as err:
-	print(err)
-	from Basic import *
-	#import Mean #debug
-	#import <packages name>
+    print(err)
+    from Basic import *
 
-need=["MassFlux_x1","MassFlux_x2"]
-#args will be inserted into Data Object
-#vargs will not be inserted into Data Object
+    # import Mean #debug
+    # import <packages name>
+
+need = ["MassFlux_x1", "MassFlux_x2"]
+# args will be inserted into Data Object
+# vargs will not be inserted into Data Object
 import numpy as np
-def get(Dataobj,args={},vargs={}):
-	Dataobj.quantities.update(args)
-	for i in need:
-		if i not in Dataobj.quantities.keys() and i not in vargs.keys():
-			print("Warning: args:",i,"is needed")
-			return Dataobj
 
-	if Dataobj.quantities["geometry"] == "SPHERICAL": #2d spherical
-		if "ac_begin" not in vargs.keys() or "ac_end" not in vargs.keys():
-			print("Warning: args: ac_begin and ac_end are needed")
-			return Dataobj
-		edge=integrate_sph_sur(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],rr=("min",),tr=(((vargs["ac_begin"],vargs["ac_end"]),),),surface=("r",))[0]
-		jet=integrate_sph_sur(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],rr=("min",),tr=(((Dataobj.grid["x2"][0],vargs["ac_begin"]),(vargs["ac_end"],Dataobj.grid["x2"][-1])),),surface=("r",))[0]
-		inj=integrate_sph_sur(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],rr=("max",),tr=(((vargs["ac_begin"],vargs["ac_end"]),),),surface=("-r",))[0]
-		outflow=integrate_sph_sur(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],rr=("max",),tr=(((Dataobj.grid["x2"][0],vargs["ac_begin"]),(vargs["ac_end"],Dataobj.grid["x2"][-1])),),surface=("-r",))[0]
-		thid1=get_closest_index(vargs["ac_begin"],Dataobj.grid["x2"])
-		thid2=get_closest_index(vargs["ac_end"],Dataobj.grid["x2"])
-		wind=sum(integrate_sph_sur(Dataobj.quantities["MassFlux_x2"][:,thid1:thid2],Dataobj.grid["x1"],Dataobj.grid["x2"][thid1:thid2],tr=("min","max"),surface=("th","-th")))
-	elif Dataobj.quantities["geometry"] == "POLAR": #2d polar
-		edge=integrate_pol_sur(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],rr=("min",),surface=("r",))[0]
-		jet=0 # no jet in 2D polar
-		inj=integrate_pol_sur(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],rr=("max",),surface=("-r",))[0]
-		outflow=0#no out flow
-		wind=0 #no wind
-	else:
-		if "ac_begin" not in vargs.keys() or "ac_end" not in vargs.keys():
-			print("Warning: args: ac_begin and ac_end are needed")
-			return Dataobj
-		inner=Dataobj.grid["x1"][0]
-		edge=integrate_surface(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],xr=("min",),yr=(((-inner,inner),),),surface=("x"))[0]
-		j1index=get_closest_index(-inner,Dataobj.grid["x2"])
-		j2index=get_closest_index(inner,Dataobj.grid["x2"])
-		jet=integrate_surface(Dataobj.quantities["MassFlux_x2"][:,:j1index],Dataobj.grid["x1"],Dataobj.grid["x2"][:j1index],yr=("max",),xr=(((0,inner),),),surface=("-y"))[0]+integrate_surface(Dataobj.quantities["MassFlux_x2"][:,j2index:],Dataobj.grid["x1"],Dataobj.grid["x2"][j2index:],yr=("min",),xr=(((0,inner),),),surface=("y"))[0]
-		wind=sum(integrate_surface(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"][:j1index],xr=("min",),yr=(((Dataobj.grid["x2"][0],-inner),(inner,Dataobj.grid["x2"][-1])),),surface=("x",)))+sum(integrate_surface(Dataobj.quantities["MassFlux_x2"],Dataobj.grid["x1"],Dataobj.grid["x2"],yr=("min","max"),surface=("y","-y")))
-		inj=integrate_surface(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],xr=("max",),yr=(((vargs["ac_begin"],vargs["ac_end"]),),),surface=("-x"))[0]
-		outflow=integrate_surface(Dataobj.quantities["MassFlux_x1"],Dataobj.grid["x1"],Dataobj.grid["x2"],xr=("max",),yr=(((Dataobj.grid["x2"][0],vargs["ac_begin"]),(vargs["ac_end"],Dataobj.grid["x2"][-1])),),surface=("-x",))[0]
-	quantities={
-		"MassFlux_edge":edge,
-		"MassFlux_wind":wind,
-		"MassFlux_inj":inj,
-		"MassFlux_outflow":outflow,
-		"MassFlux_jet":jet,
-		"MassFlux_Toutflow":-(outflow+wind),
-		"MassFlux_Accretion":-(edge+jet)
-	}
-	Dataobj.quantities.update(quantities)
-	return Dataobj
-def result(quantity_name=None,anafname=None):
-	return ("MassFlux_edge","MassFlux_Toutflow") #this function will return result types shown in GUI
+
+def get(Dataobj, args={}, vargs={}):
+    Dataobj.quantities.update(args)
+    for i in need:
+        if i not in Dataobj.quantities.keys() and i not in vargs.keys():
+            print("Warning: args:", i, "is needed")
+            return Dataobj
+
+    if Dataobj.quantities["geometry"] == "SPHERICAL":  # 2d spherical
+        if "ac_begin" not in vargs.keys() or "ac_end" not in vargs.keys():
+            print("Warning: args: ac_begin and ac_end are needed")
+            return Dataobj
+        edge = integrate_sph_sur(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            rr=("min",),
+            tr=(((vargs["ac_begin"], vargs["ac_end"]),),),
+            surface=("r",),
+        )[0]
+        jet = integrate_sph_sur(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            rr=("min",),
+            tr=(
+                (
+                    (Dataobj.grid["x2"][0], vargs["ac_begin"]),
+                    (vargs["ac_end"], Dataobj.grid["x2"][-1]),
+                ),
+            ),
+            surface=("r",),
+        )[0]
+        inj = integrate_sph_sur(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            rr=("max",),
+            tr=(((vargs["ac_begin"], vargs["ac_end"]),),),
+            surface=("-r",),
+        )[0]
+        outflow = integrate_sph_sur(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            rr=("max",),
+            tr=(
+                (
+                    (Dataobj.grid["x2"][0], vargs["ac_begin"]),
+                    (vargs["ac_end"], Dataobj.grid["x2"][-1]),
+                ),
+            ),
+            surface=("-r",),
+        )[0]
+        thid1 = get_closest_index(vargs["ac_begin"], Dataobj.grid["x2"])
+        thid2 = get_closest_index(vargs["ac_end"], Dataobj.grid["x2"])
+        wind = sum(
+            integrate_sph_sur(
+                Dataobj.quantities["MassFlux_x2"][:, thid1:thid2],
+                Dataobj.grid["x1"],
+                Dataobj.grid["x2"][thid1:thid2],
+                tr=("min", "max"),
+                surface=("th", "-th"),
+            )
+        )
+    elif Dataobj.quantities["geometry"] == "POLAR":  # 2d polar
+        edge = integrate_pol_sur(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            rr=("min",),
+            surface=("r",),
+        )[0]
+        jet = 0  # no jet in 2D polar
+        inj = integrate_pol_sur(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            rr=("max",),
+            surface=("-r",),
+        )[0]
+        outflow = 0  # no out flow
+        wind = 0  # no wind
+    else:
+        if "ac_begin" not in vargs.keys() or "ac_end" not in vargs.keys():
+            print("Warning: args: ac_begin and ac_end are needed")
+            return Dataobj
+        inner = Dataobj.grid["x1"][0]
+        edge = integrate_surface(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            xr=("min",),
+            yr=(((-inner, inner),),),
+            surface=("x",),
+        )[0]
+        j1index = get_closest_index(-inner, Dataobj.grid["x2"])
+        j2index = get_closest_index(inner, Dataobj.grid["x2"])
+        jet = (
+            integrate_surface(
+                Dataobj.quantities["MassFlux_x2"][:, :j1index],
+                Dataobj.grid["x1"],
+                Dataobj.grid["x2"][:j1index],
+                yr=("max",),
+                xr=(((0, inner),),),
+                surface=("-y",),
+            )[0]
+            + integrate_surface(
+                Dataobj.quantities["MassFlux_x2"][:, j2index:],
+                Dataobj.grid["x1"],
+                Dataobj.grid["x2"][j2index:],
+                yr=("min",),
+                xr=(((0, inner),),),
+                surface=("y",),
+            )[0]
+        )
+        wind = sum(
+            integrate_surface(
+                Dataobj.quantities["MassFlux_x1"],
+                Dataobj.grid["x1"],
+                Dataobj.grid["x2"][:j1index],
+                xr=("min",),
+                yr=(
+                    ((Dataobj.grid["x2"][0], -inner), (inner, Dataobj.grid["x2"][-1])),
+                ),
+                surface=("x",),
+            )
+        ) + sum(
+            integrate_surface(
+                Dataobj.quantities["MassFlux_x2"],
+                Dataobj.grid["x1"],
+                Dataobj.grid["x2"],
+                yr=("min", "max"),
+                surface=("y", "-y"),
+            )
+        )
+        inj = integrate_surface(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            xr=("max",),
+            yr=(((vargs["ac_begin"], vargs["ac_end"]),),),
+            surface=("-x",),
+        )[0]
+        outflow = integrate_surface(
+            Dataobj.quantities["MassFlux_x1"],
+            Dataobj.grid["x1"],
+            Dataobj.grid["x2"],
+            xr=("max",),
+            yr=(
+                (
+                    (Dataobj.grid["x2"][0], vargs["ac_begin"]),
+                    (vargs["ac_end"], Dataobj.grid["x2"][-1]),
+                ),
+            ),
+            surface=("-x",),
+        )[0]
+    quantities = {
+        "MassFlux_edge": edge,
+        "MassFlux_wind": wind,
+        "MassFlux_inj": inj,
+        "MassFlux_outflow": outflow,
+        "MassFlux_jet": jet,
+        "MassFlux_Toutflow": -(outflow + wind),
+        "MassFlux_Accretion": -(edge + jet),
+    }
+    Dataobj.quantities.update(quantities)
+    return Dataobj
+
+
+def result(quantity_name=None, anafname=None):
+    return (
+        "MassFlux_edge",
+        "MassFlux_Toutflow",
+    )  # this function will return result types shown in GUI
+
 ```
 
 ```shell
